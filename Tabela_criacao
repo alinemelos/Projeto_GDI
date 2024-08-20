@@ -1,8 +1,4 @@
 -- Tabela Cliente
-CREATE SEQUENCE seq_cliente
-START WITH 1
-INCREMENT BY 1
-NOCACHE;
 
 CREATE TABLE Cliente (
     Nome VARCHAR2(40) NOT NULL,
@@ -16,29 +12,14 @@ CREATE TABLE Cliente (
     Numero NUMBER,
     CONSTRAINT chk_estado_civil CHECK (Estado_civil IN ('Solteiro', 'Casado', 'Divorciado', 'Viúvo'))
 );
--- pode ignorar essa parte 
-CREATE OR REPLACE TRIGGER trg_cliente_before_insert
-BEFORE INSERT ON Cliente
-FOR EACH ROW
-BEGIN
-   IF :NEW.CPF_cliente IS NULL THEN
-      SELECT seq_cliente.NEXTVAL INTO :NEW.CPF_cliente FROM dual;
-   END IF;
-END;
-/
 
 -- Tabela Banco
-CREATE SEQUENCE seq_banco
-START WITH 1
-INCREMENT BY 1
-NOCACHE;
 
 CREATE TABLE Banco (
     Nome VARCHAR2(40) NOT NULL,
     CNPJ CHAR(14),
     Telefone  VARCHAR2(20),
     CONSTRAINT Banco_pk PRIMARY KEY (CNPJ)
-
 );
 
 -- Tabela Imovel
@@ -62,9 +43,6 @@ CREATE TABLE Imovel (
     CONSTRAINT fk_proprietario FOREIGN KEY (CPF_Proprietario) REFERENCES Cliente(CPF_cliente)
 );
 -- Tabela Locatario
-CREATE SEQUENCE seq_locatario
-START WITH 1
-INCREMENT BY 1;
 
 CREATE TABLE Locatario (
     Tipo_desejado VARCHAR2(50),
@@ -76,9 +54,6 @@ CREATE TABLE Locatario (
     CONSTRAINT fk_locatario_cliente FOREIGN KEY (CPF_locatario) REFERENCES Cliente(CPF_cliente)
 );
 -- Tabela Corretor
-CREATE SEQUENCE seq_corretores
-START WITH 1
-INCREMENT BY 1;
 
 CREATE TABLE Corretores (
     Nome VARCHAR2(40),
@@ -90,9 +65,6 @@ CREATE TABLE Corretores (
 );
 
 -- Tabela Proprietario
-CREATE SEQUENCE seq_proprietario
-START WITH 1
-INCREMENT BY 1;
 
 CREATE TABLE Proprietario (
     CPF_proprietario CHAR(11),
@@ -100,10 +72,7 @@ CREATE TABLE Proprietario (
     CONSTRAINT fk_proprietario_cliente FOREIGN KEY (CPF_proprietario) REFERENCES Cliente(CPF_cliente)
 );
 
-
-CREATE SEQUENCE seq_visita 
-START WITH 1 
-INCREMENT BY 1;
+-- Tabela Visita
 
 CREATE TABLE Visita (
 	idImovel NUMBER,
@@ -120,6 +89,7 @@ CREATE TABLE Visita (
 );
 
 -- Tabela Financia
+
 CREATE TABLE Financia (
     CPF_locatario CHAR(11),
     CNPJ_banco CHAR(14),
@@ -130,7 +100,9 @@ CREATE TABLE Financia (
     CONSTRAINT fk_financia_banco FOREIGN KEY (CNPJ_banco) REFERENCES Banco(CNPJ),
     CONSTRAINT fk_financia_imovel FOREIGN KEY (idImovel) REFERENCES Imovel(idImovel)
 );
+
 -- Tabela Aluga
+
 CREATE TABLE Aluga (
     idImovel NUMBER,
     CPF_corretor CHAR(11),
@@ -143,18 +115,22 @@ CREATE TABLE Aluga (
     CONSTRAINT fk_aluga_corretor FOREIGN KEY (CPF_corretor) REFERENCES Corretores(CPF_corretor),
     CONSTRAINT fk_aluga_locatario FOREIGN KEY (CPF_locatario) REFERENCES Locatario(CPF_locatario)
 );
+
 -- Tabela Anuncia
+
 CREATE TABLE Anuncia (
-    idProprietario NUMBER,
+    CPF_proprietario CHAR(11),
     idImovel NUMBER,
     Cliente_desejado VARCHAR2(40),
     Status VARCHAR2(10),
     Data DATE,
-    PRIMARY KEY (idProprietario, idImovel),
-    CONSTRAINT fk_anuncia_proprietario FOREIGN KEY (idProprietario) REFERENCES Proprietario(idProprietario),
+    PRIMARY KEY (CPF_proprietario, idImovel),
+    CONSTRAINT fk_anuncia_proprietario FOREIGN KEY (CPF_proprietario) REFERENCES Proprietario(CPF_proprietario),
     CONSTRAINT fk_anuncia_imovel FOREIGN KEY (idImovel) REFERENCES Imovel(idImovel)
 );
+
 -- Tabela Contata: 
+
 CREATE TABLE Contata (
     CPF_corretor CHAR(11),
     CPF_locatario CHAR(11),
