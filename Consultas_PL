@@ -135,3 +135,111 @@ CREATE OR REPLACE PACKAGE BODY locatario_pack IS
         COMMIT;
     END change_pet_sta;
 END locatario_pack;
+
+-utilizando out, in out com PROCEDURES
+CREATE OR REPLACE PROCEDURE endereco (x out Cliente.CEP%TYPE, y out Cliente.Rua%TYPE, z out Cliente.Numero%TYPE, CPF in out Cliente.CPF_cliente%TYPE)
+AS
+BEGIN
+	SELECT CEP INTO x FROM Cliente where CPF_cliente = CPF;
+	SELECT Rua INTO y FROM Cliente where CPF_cliente = CPF;
+	SELECT Numero INTO z FROM Cliente where CPF_cliente = CPF;
+COMMIT;
+END;
+
+
+DECLARE 
+    x	Cliente.CEP%TYPE;
+    y	Cliente.Rua%TYPE;
+    z	Cliente.Numero%TYPE;
+	w	Cliente.CPF_cliente%TYPE;
+
+BEGIN
+    w := '12345678903';
+	endereco(x, y,z, w);
+	DBMS_OUTPUT.PUT_LINE(x|| y || z || w);
+END;
+
+
+-trigger que identifica se depois do update tem algum valor menor que 0
+CREATE TRIGGER trg_update_valor
+AFTER UPDATE ON Imovel
+FOR EACH ROW
+WHEN (NEW.Valor < 0)
+BEGIN
+    RAISE_APPLICATION_ERROR(-20001, 'Valor negativo não permitido');
+END;
+
+-criação de uma tabela que armazenará os ‘DELETE’ com utilização de trigger
+CREATE TABLE log_deletes (tabela VARCHAR2(20), data_hora DATE);
+
+CREATE OR REPLACE TRIGGER trg_log_deletes
+AFTER DELETE ON Cliente
+BEGIN
+    INSERT INTO log_deletes (tabela, data_hora)
+    VALUES ('Cliente', SYSDATE);
+END;
+
+
+
+-utilização do case when
+	SELECT
+        Valor,
+        Titulo,
+        CASE
+            WHEN Valor > 500000 THEN 'Luxo'
+            WHEN Valor BETWEEN 250000 AND 500000 THEN 'Médio'
+            ELSE 'Entrada'
+        END AS faixa_preco
+    FROM Imovel;
+
+--usando while loop para contar a quantidade de anúncios ativos
+DECLARE
+   -- Declarar o cursor
+   CURSOR imoveis_ativos IS
+      SELECT  status FROM anuncia;
+   
+
+    v_status anuncia.status%TYPE;
+	count_ativos NUMBER;
+	count_inativos NUMBER;
+BEGIN
+    -- Abrir o cursor
+    OPEN imoveis_ativos;
+	count_ativos := 0;
+	count_inativos := 0;
+
+	LOOP
+		FETCH imoveis_ativos INTO  v_status;
+		IF (v_status = 'Ativo') THEN 
+            count_ativos := count_ativos + 1;
+		END IF;
+		IF (v_status = 'Inativo') THEN 
+            count_inativos := count_inativos + 1;
+		END IF;
+		EXIT WHEN imoveis_ativos%NOTFOUND;
+		
+		
+	END LOOP;
+	DBMS_OUTPUT.PUT_LINE(' No momento há: ' || count_inativos || ' Anuncios Inativos e ' || count_ativos|| ' Anuncios Ativos');
+	CLOSE imoveis_ativos;
+END;
+
+
+usando  for loop para contar a quantidade de anúncios ativos
+DECLARE
+  TYPE status_record IS RECORD (
+    status VARCHAR2(20),
+    quantidade NUMBER
+  );
+  v_status_rec status_record;
+  v_status_result status_record;
+BEGIN
+  FOR v_status_rec IN (
+    SELECT status, COUNT(*) AS quantidade
+    FROM Anuncia
+    GROUP BY Status
+  ) LOOP
+    DBMS_OUTPUT.PUT_LINE('Há ' || v_status_rec.quantidade || ' anúncios ' || v_status_rec.status||'s');
+  END LOOP;
+END;
+
