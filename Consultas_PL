@@ -1,0 +1,137 @@
+--usando RECORD para alocar mais de um dado em uma única variável:
+DECLARE 
+	TYPE T1 IS RECORD(L1 Imovel.Valor%TYPE, L2 Imovel.Descricao%TYPE);
+    	a	T1;
+	b	Imovel.Titulo%TYPE := 'Cobertura Duplex';
+BEGIN 
+	SELECT Valor,Descricao INTO a FROM Imovel WHERE Imovel.Titulo = b; 
+ 
+	DBMS_OUTPUT.PUT_LINE('O Imóvel com Título: '|| b || ', custa:' || a.L1 || ' e possui a seguinte descrição: ' || a.L2); 
+END;
+
+--output:
+--O Imóvel com Título: Cobertura Duplex, custa:1000000 e possui a seguinte descrição: Cobertura duplex para quem busca espaço e conforto
+
+--criando uma PROCEDURE para mudar o estado da coluna Tem_pet, usando IF/ELSIF
+
+CREATE OR REPLACE PROCEDURE change_pet_sta(x in Locatario.CPF_locatario%TYPE)
+IS
+   a  VARCHAR(10);
+BEGIN
+    SELECT Tem_pet INTO a FROM Locatario WHERE Locatario.CPF_locatario = x;
+	If (a = 'Sim') 
+        THEN UPDATE Locatario SET Tem_pet = 'Nao' WHERE Locatario.CPF_locatario = x;
+	ELSIF (a = 'Nao') 
+        THEN UPDATE Locatario SET Tem_pet = 'Sim' WHERE Locatario.CPF_locatario = x;
+	END IF;
+COMMIT;
+END change_pet_sta;
+
+
+--criando uma função que retorna a renda média após ser fornecido o CPF_locatario 
+
+CREATE OR REPLACE FUNCTION pegar_renda_media (x IN Locatario.CPF_locatario%type )
+RETURN FLOAT
+IS
+    rm Locatario.Renda_media%TYPE :=0;
+BEGIN 
+	SELECT Renda_media INTO rm FROM Locatario WHERE CPF_locatario = x; 
+	RETURN rm;
+ 	
+END pegar_renda_media;
+
+--testando a função criada:
+DECLARE 
+	y FLOAT;
+BEGIN
+	y := pegar_renda_media('01234567590');
+	DBMS_OUTPUT.PUT_LINE(y);
+END;
+output:
+7500
+
+
+--usando %ROWTYPE e %TYPE para mostrar apenas o átomo requisitado:
+
+DECLARE 
+	a	Cliente%ROWTYPE; 
+	b	Cliente.CPF_cliente%TYPE := '78901234567'; 
+BEGIN 
+	SELECT * INTO a FROM Cliente WHERE CPF_cliente = b; 
+ 
+	DBMS_OUTPUT.PUT_LINE(a.Nome || ', possuidor do telefone:' || a.Telefone || ' e CPF:' || b); 
+END;
+
+output:
+	Pedro Santos, possuidor do telefone:(21) 98765-4321 e CPF:78901234567
+
+-- verifica se o cpf pertence a algum cliente 
+DECLARE
+   v_nome_cliente VARCHAR2(50);
+BEGIN
+   SELECT nome INTO v_nome_cliente
+   FROM cliente
+   WHERE CPF_cliente = 123456789;
+   
+   DBMS_OUTPUT.PUT_LINE('Nome do cliente: ' || v_nome_cliente);
+
+EXCEPTION
+   WHEN NO_DATA_FOUND THEN
+      DBMS_OUTPUT.PUT_LINE('O cliente com este cpf não foi encontrado');
+END;
+
+
+-- Cursor que retorna os imoveis com anúncios ativos
+DECLARE
+   -- Declarar o cursor
+   CURSOR imoveis_ativos IS
+      SELECT idimovel, cliente_desejado, status FROM anuncia WHERE status = 'Ativo';
+   
+   -- Variáveis para armazenar os dados do cursor
+   v_idimovel    anuncia.idimovel%TYPE;
+   v_cliente_desejado anuncia.cliente_desejado%TYPE;
+   v_status anuncia.status%TYPE;
+
+BEGIN
+   -- Abrir o cursor
+   OPEN imoveis_ativos;
+
+   LOOP
+      FETCH imoveis_ativos INTO v_idimovel, v_cliente_desejado, v_status;
+
+      EXIT WHEN imoveis_ativos%NOTFOUND;
+
+      DBMS_OUTPUT.PUT_LINE('ID do Imóvel: ' || v_idimovel || ', Cliente desejado: ' || v_cliente_desejado || ', Status: ' || v_status);
+   END LOOP;
+
+   CLOSE imoveis_ativos;
+END;
+
+-Criando um pacote com as funções que atuam na tabela locatario
+
+CREATE OR REPLACE PACKAGE locatario_pack IS
+    FUNCTION pegar_renda_media (x IN Locatario.CPF_locatario%type )RETURN FLOAT;
+    PROCEDURE change_pet_sta(x in Locatario.CPF_locatario%TYPE);
+END locatario_pack;
+
+CREATE OR REPLACE PACKAGE BODY locatario_pack IS
+    FUNCTION pegar_renda_media (x IN Locatario.CPF_locatario%type )RETURN FLOAT
+    IS
+        rm Locatario.Renda_media%TYPE :=0;
+    BEGIN
+        SELECT Renda_media INTO rm FROM Locatario WHERE CPF_locatario = x;
+        RETURN rm;
+    END pegar_renda_media;
+
+    PROCEDURE change_pet_sta(x in Locatario.CPF_locatario%TYPE) IS
+        a VARCHAR(10);
+    BEGIN
+        SELECT Tem_pet INTO a FROM Locatario WHERE Locatario.CPF_locatario = x;
+        IF (a = 'Sim') THEN
+            UPDATE Locatario SET Tem_pet = 'Nao' WHERE Locatario.CPF_locatario = x;
+        ELSIF (a = 'Nao') THEN
+            UPDATE Locatario SET Tem_pet = 'Sim' WHERE Locatario.CPF_locatario = x;
+        END IF;
+        COMMIT;
+    END change_pet_sta;
+END locatario_pack;
