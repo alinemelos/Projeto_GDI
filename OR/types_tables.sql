@@ -1,4 +1,3 @@
-
 CREATE TYPE tipo_Endereco as OBJECT( 
     rua VARCHAR (45), 
     cidade VARCHAR(25), 
