@@ -1,5 +1,3 @@
-
-
 CREATE TYPE tipo_Endereco as OBJECT( 
     rua VARCHAR (45), 
     cidade VARCHAR(25), 
@@ -7,6 +5,7 @@ CREATE TYPE tipo_Endereco as OBJECT(
     Numero NUMBER 
 ); 
 /
+-- Varray
 CREATE TYPE array_telefone AS VARRAY(3) OF VARCHAR2(11);
 /
 -- Cliente
@@ -185,3 +184,20 @@ CREATE TABLE Anuncia OF tipo_Anuncia(
     CONSTRAINT fk_anuncia_imovel FOREIGN KEY (idImovel) REFERENCES Imovel(idImovel)
 );
 /
+
+-- Alter Type para usar o REF:
+
+--mudando o tipo_imovel para referenciar proprietario ao invés de usar a chave estrangeira CPF
+ALTER TYPE tipo_Imovel DROP ATTRIBUTE CPF_Proprietario CASCADE; 
+ALTER TYPE tipo_Imovel ADD ATTRIBUTE Proprietario REF tipo_Proprietario CASCADE; 
+
+--mudando o tipo_financia
+ALTER TYPE tipo_Financia DROP ATTRIBUTE CPF_locatario CASCADE; 
+ALTER TYPE tipo_Financia ADD ATTRIBUTE Locatario REF tipo_Locatario CASCADE; 
+
+ALTER TYPE tipo_Financia DROP ATTRIBUTE CNPJ_banco CASCADE; 
+ALTER TYPE tipo_Financia ADD ATTRIBUTE Banco REF tipo_Banco CASCADE; 
+
+ALTER TYPE tipo_Financia DROP ATTRIBUTE idImovel CASCADE;
+ALTER TYPE tipo_Financia ADD ATTRIBUTE Imovel REF tipo_Imovel CASCADE;
+
