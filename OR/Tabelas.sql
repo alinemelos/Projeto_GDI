@@ -2,8 +2,19 @@ CREATE TYPE tipo_Endereco as OBJECT(
     rua VARCHAR (45), 
     cidade VARCHAR(25), 
     CEP CHAR(9), 
-    Numero NUMBER 
-); 
+    Numero NUMBER,
+ 	CONSTRUCTOR FUNCTION tipo_Endereco(SELF IN OUT NOCOPY tipo_Endereco, Rua VARCHAR2, Cidade VARCHAR2, CEP VARCHAR2, Numero NUMBER) RETURN SELF AS RESULT); 
+
+/
+
+CREATE OR REPLACE TYPE BODY tipo_Endereco as 
+	CONSTRUCTOR FUNCTION tipo_Endereco(SELF IN OUT tipo_Endereco,  Rua VARCHAR2, Cidade VARCHAR2, Cep VARCHAR2, numero NUMBER ) 
+    RETURN SELF AS RESULT IS BEGIN
+	SELF.rua := Rua; SELF.cidade := Cidade;
+	SELF.CEP := Cep; SELF.Numero := numero;
+	END;
+END;
+
 /
 -- Varray
 CREATE TYPE array_telefone AS VARRAY(3) OF VARCHAR2(11);
@@ -16,15 +27,31 @@ CREATE OR REPLACE TYPE tipo_Cliente AS OBJECT (
     Genero VARCHAR2(20),
     Telefone array_telefone,
     CPF_cliente CHAR(11),
-    Endereco tipo_Endereco
+    endereco REF tipo_Endereco
 )NOT FINAL;
 /
 --Banco
 CREATE OR REPLACE TYPE tipo_Banco AS OBJECT (
     Nome VARCHAR2(40),
     Telefone array_telefone,
-    CNPJ CHAR(14)
-);
+    CNPJ CHAR(14),
+    
+    ORDER MEMBER FUNCTION compareTo(b tipo_Banco) RETURN INTEGER  
+);	
+/
+CREATE TYPE BODY tipo_Banco As  
+ORDER MEMBER FUNCTION compareTo(b tipo_Banco) RETURN INTEGER  
+	BEGIN  
+		IF Nome > b.Nome THEN  
+			RETURN -1  
+		ELSIF Nome < b.Nome THEN  
+			RETURN 1  
+		ELSE   
+			RETURN 0   
+  
+		END IF;  
+	END compareTo;  
+END;
 /
 -- Imovel
 CREATE TYPE tipo_Imovel AS OBJECT(
@@ -55,8 +82,17 @@ CREATE TYPE tipo_Visita AS OBJECT(
     CPF_locatario CHAR(11),
     CPF_corretor CHAR(11),
     Data DATE,
-    Avaliacao NUMBER
+    Avaliacao NUMBER,
+    MEMBER PROCEDURE mudar_avaliacao(a NUMBER)
 );
+/
+CREATE OR REPLACE TYPE BODY tipo_Visita AS
+MEMBER PROCEDURE mudar_avaliacao(a NUMBER) IS
+BEGIN
+Avaliacao := a;
+END;
+END;
+
 /
 -- Financia
 CREATE TYPE tipo_Financia AS OBJECT(
@@ -67,15 +103,24 @@ CREATE TYPE tipo_Financia AS OBJECT(
 );
 /
 -- Aluga
-CREATE TYPE tipo_Aluga AS OBJECT(
+CREATE OR REPLACE TYPE tipo_Aluga AS OBJECT(
     idImovel NUMBER,
     CPF_corretor CHAR(11),
     CPF_locatario CHAR(11),
     Mensalidade FLOAT,
     Inicio DATE,
-    Fim DATE
+    Fim DATE,
+	MAP MEMBER FUNCTION valor_anual RETURN FLOAT
 );
 /
+CREATE OR REPLACE TYPE BODY tipo_aluga AS
+MAP MEMBER FUNCTION valor_anual RETURN FLOAT IS
+BEGIN
+RETURN (Mensalidade * 12);
+END;
+END;
+/
+
 -- Anuncia
 CREATE TYPE tipo_Anuncia AS OBJECT(
     CPF_proprietario CHAR(11),
@@ -111,8 +156,10 @@ CREATE TABLE Endereco OF tipo_Endereco (
 -- Tabela Cliente
 CREATE TABLE Cliente OF tipo_Cliente (
     PRIMARY KEY (CPF_cliente),
+    endereco WITH ROWID REFERENCES Endereco,
     CONSTRAINT chk_estado_civil CHECK (Estado_civil IN ('Solteiro', 'Casado', 'Divorciado', 'Viúvo'))
 );
+
 /
 -- Tabela Banco
 CREATE TABLE Banco OF tipo_Banco(
@@ -200,4 +247,3 @@ ALTER TYPE tipo_Financia ADD ATTRIBUTE Banco REF tipo_Banco CASCADE;
 
 ALTER TYPE tipo_Financia DROP ATTRIBUTE idImovel CASCADE;
 ALTER TYPE tipo_Financia ADD ATTRIBUTE Imovel REF tipo_Imovel CASCADE;
-
