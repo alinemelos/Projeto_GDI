@@ -34,8 +34,24 @@ CREATE OR REPLACE TYPE tipo_Cliente AS OBJECT (
 CREATE OR REPLACE TYPE tipo_Banco AS OBJECT (
     Nome VARCHAR2(40),
     Telefone array_telefone,
-    CNPJ CHAR(14)
-);
+    CNPJ CHAR(14),
+    
+    ORDER MEMBER FUNCTION compareTo(b tipo_Banco) RETURN INTEGER  
+);	
+/
+CREATE TYPE BODY ord_banco As  
+ORDER MEMBER FUNCTION compareTo(b tipo_Banco) RETURN INTEGER  
+	BEGIN  
+		IF Nome > b.Nome THEN  
+			RETURN -1  
+		ELSIF Nome < b.Nome THEN  
+			RETURN 1  
+		ELSE   
+			RETURN 0   
+  
+		END IF;  
+	END compareTo;  
+END;
 /
 -- Imovel
 CREATE TYPE tipo_Imovel AS OBJECT(
