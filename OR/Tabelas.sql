@@ -39,7 +39,7 @@ CREATE OR REPLACE TYPE tipo_Banco AS OBJECT (
     ORDER MEMBER FUNCTION compareTo(b tipo_Banco) RETURN INTEGER  
 );	
 /
-CREATE TYPE BODY ord_banco As  
+CREATE TYPE BODY tipo_Banco As  
 ORDER MEMBER FUNCTION compareTo(b tipo_Banco) RETURN INTEGER  
 	BEGIN  
 		IF Nome > b.Nome THEN  
