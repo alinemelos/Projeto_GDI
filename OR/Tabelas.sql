@@ -27,8 +27,18 @@ CREATE OR REPLACE TYPE tipo_Cliente AS OBJECT (
     Genero VARCHAR2(20),
     Telefone array_telefone,
     CPF_cliente CHAR(11),
-    endereco REF tipo_Endereco
+    endereco REF tipo_Endereco,
+
+    MEMBER FUNCTION getInfo RETURN VARCHAR2
+    
 )NOT FINAL;
+/
+CREATE OR REPLACE TYPE BODY tipo_Cliente AS
+    MEMBER FUNCTION getInfo RETURN VARCHAR2 IS
+    BEGIN
+    	RETURN 'NOME: ': || Nome || ',CPF: '|| TO_CHAR(CPF_cliente);
+	END;
+END;    
 /
 --Banco
 CREATE OR REPLACE TYPE tipo_Banco AS OBJECT (
@@ -42,12 +52,12 @@ CREATE OR REPLACE TYPE tipo_Banco AS OBJECT (
 CREATE TYPE BODY tipo_Banco As  
 ORDER MEMBER FUNCTION compareTo(b tipo_Banco) RETURN INTEGER  
 	BEGIN  
-		IF Nome > b.Nome THEN  
-			RETURN -1  
-		ELSIF Nome < b.Nome THEN  
-			RETURN 1  
-		ELSE   
-			RETURN 0   
+	IF Nome > b.Nome THEN  
+	RETURN -1  
+	ELSIF Nome < b.Nome THEN  
+	RETURN 1  
+	ELSE   
+	RETURN 0   
   
 		END IF;  
 	END compareTo;  
@@ -141,9 +151,18 @@ CREATE OR REPLACE TYPE tipo_Locatario UNDER tipo_Cliente (
     Tipo_desejado VARCHAR2(50),
     Ocupacao VARCHAR2(20),
     Renda_Media FLOAT,
-    Tem_Pet CHAR(3)
+    Tem_Pet CHAR(3),
+
+    OVERRIDING MEMBER FUNCTION getInfo RETURN VARCHAR2
 );
-/ 
+/
+CREATE OR REPLACE TYPE BODY tipo_Locatario AS
+    MEMBER FUNCTION getInfo RETURN VARCHAR2 IS
+    BEGIN
+    	RETURN 'NOME: ' || Nome || ',RENDA MÉDIA: ' || TO_CHAR(Renda_Media);
+    
+    
+/    
 -- Subtipo para Proprietário
 CREATE OR REPLACE TYPE tipo_Proprietario UNDER tipo_Cliente (
 );
@@ -230,7 +249,7 @@ CREATE TABLE Anuncia OF tipo_Anuncia(
     CONSTRAINT fk_anuncia_proprietario FOREIGN KEY (CPF_proprietario) REFERENCES Proprietario(CPF_cliente),
     CONSTRAINT fk_anuncia_imovel FOREIGN KEY (idImovel) REFERENCES Imovel(idImovel)
 );
-/
+/    
 
 -- Alter Type para usar o REF:
 
