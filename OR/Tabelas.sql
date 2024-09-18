@@ -29,16 +29,23 @@ CREATE OR REPLACE TYPE tipo_Cliente AS OBJECT (
     CPF_cliente CHAR(11),
     endereco REF tipo_Endereco,
 
-    MEMBER FUNCTION getInfo RETURN VARCHAR2
+    MEMBER FUNCTION getInfo RETURN VARCHAR2,
+    FINAL MEMBER FUNCTION getNome RETURN VARCHAR2
     
 )NOT FINAL;
 /
+--Função que retona o NOME do clinete e não pode ser subescrita por qualquer subclasse
 CREATE OR REPLACE TYPE BODY tipo_Cliente AS
-    MEMBER FUNCTION getInfo RETURN VARCHAR2 IS
-    BEGIN
-    	RETURN 'NOME: ': || Nome || ',CPF: '|| TO_CHAR(CPF_cliente);
+   FINAL MEMBER FUNCTION getNome RETURN VARCHAR2 IS
+    BEGIN 
+    	RETURN 'NOME: ' ||Nome;
 	END;
-END;    
+--Função que retorna getInfo subescrito do método da super classe
+	MEMBER FUNCTION getInfo RETURN VARCHAR2 IS
+    BEGIN
+    	RETURN 'ESTADO CIVÍL: ': || Estado_civil || ',CPF: '|| TO_CHAR(CPF_cliente);
+	END;
+END;
 /
 --Banco
 CREATE OR REPLACE TYPE tipo_Banco AS OBJECT (
@@ -156,6 +163,7 @@ CREATE OR REPLACE TYPE tipo_Locatario UNDER tipo_Cliente (
     OVERRIDING MEMBER FUNCTION getInfo RETURN VARCHAR2
 );
 /
+--Função que subescreve a função geInfo da SuperClasse    
 CREATE OR REPLACE TYPE BODY tipo_Locatario AS
     MEMBER FUNCTION getInfo RETURN VARCHAR2 IS
     BEGIN
