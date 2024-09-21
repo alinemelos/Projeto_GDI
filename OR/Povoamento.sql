@@ -41,6 +41,20 @@ INSERT INTO Endereco
 VALUES ('Rua do Sol','São Paulo', '90123-456',900);
 INSERT INTO Endereco
 VALUES ('Avenida Central','São Paulo', '12345-698',910);
+INSERT INTO Endereco
+VALUES ('Rua Pedro Gonzaga de Lima','São Paulo', '58100-740',123);
+INSERT INTO Endereco
+VALUES ('Rua Rio Grande do Sul','Curitiba', '29901-120',123);
+INSERT INTO Endereco
+VALUES ('Rua Travessa 15','São Vicente', '68927-131',55);
+INSERT INTO Endereco
+VALUES ('Rua Agenor Veloso','São Luiz', '64023-285',564);
+INSERT INTO Endereco
+VALUES ('Rua Siqueira Campos','São Luiz', '78130-426',58);
+INSERT INTO Endereco
+VALUES ('Praça Athos Abilhoa','São Paulo', '81450-412',511);
+INSERT INTO Endereco
+VALUES ('Rua São José','São Paulo', '65607-440',567);
 
 -- tabela cliente
 DECLARE
@@ -285,3 +299,212 @@ BEGIN
     VALUES ('Beatriz Souza', TO_DATE('1995-07-07', 'YYYY-MM-DD'), 'Casado', 'Feminino', array_telefone('71987654321', NULL, NULL), '28765432109', v_endereco_ref);
 END;
 /
+
+-- tabela Banco
+INSERT INTO Banco VALUES (
+    tipo_Banco('Banco do Brasil', array_telefone('11987654321', '11912345678', '11998765432'), '12345678000199')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Caixa Econômica Federal', array_telefone('21876543210', '21812345679', '21898765431'), '98765432000188')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Bradesco', array_telefone('31987654321', '31912345678', NULL), '56789012000177')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Banco do Brasil', array_telefone('31987654321', '31912345678', '1112345678'), '12345678000195')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Itaú Unibanco', array_telefone('11987654321', NULL, NULL), '98765432000100')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Santander', array_telefone('2123456789', NULL, NULL), '12345678000276')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Bradesco', array_telefone('2134567890', NULL, NULL), '12345678000357')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Caixa Econômica Federal', array_telefone('3198765432', NULL, NULL), '12345678000438')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Banco do Nordeste', array_telefone('4187654321', NULL, NULL), '12345678000519')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Banco de Brasília', array_telefone('6187654321', NULL, NULL), '12345678000600')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Banco Safra', array_telefone('1134567890', NULL, NULL), '12345678000781')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Banco Pan', array_telefone('11987654322', NULL, NULL), '12345678000862')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Banco Votorantim', array_telefone('1134567891', NULL, NULL), '12345678000943')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Banco Daycoval', array_telefone('1134567892', NULL, NULL), '12345678001024')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Banco Alfa', array_telefone('1134567893', NULL, NULL), '12345678001105')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Banco Fibra', array_telefone('1134567894', NULL, NULL), '12345678001286')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Banco BTG Pactual', array_telefone('1134567895', NULL, NULL), '12345678001367')
+);
+INSERT INTO Banco VALUES (
+    tipo_Banco('Banco ModalMais', array_telefone('1134567896', NULL, NULL), '12345678001448')
+);
+
+--tabela Proprietario
+
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '22001-000';
+
+    INSERT INTO Proprietario
+    VALUES ('Pedro Santos', TO_DATE('1998-05-15', 'YYYY-MM-DD'), 'Casado', 'Masculino', array_telefone('21987654321', NULL, NULL), '78901234567', v_endereco_ref);
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '13001-000';
+
+    INSERT INTO Proprietario
+    VALUES ('Ana Oliveira', TO_DATE('2005-07-05', 'YYYY-MM-DD'), 'Solteiro', 'Feminino', array_telefone('19987654321', '81994757498', NULL), '12345678909', v_endereco_ref);
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '25001-000';
+
+    INSERT INTO Proprietario
+    VALUES ('Lucas Lima', TO_DATE('1992-02-10', 'YYYY-MM-DD'), 'Divorciado', 'Feminino', array_telefone('24977654321', '81994757497', NULL), '98765432109', v_endereco_ref);
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '14001-000';
+
+    INSERT INTO Proprietario
+    VALUES ('Beatriz Souza', TO_DATE('1999-09-25', 'YYYY-MM-DD'), 'Casado', 'Feminino', array_telefone('16985654321', '81994757491', '16996739626'), '34567890123', v_endereco_ref);
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '35001-000';
+
+    INSERT INTO Proprietario
+    VALUES ('Rafael Santos', TO_DATE('1988-05-15', 'YYYY-MM-DD'), 'Solteiro', 'Masculino', array_telefone('31987654322', '31994757491', '31996739626'), '67890123456', v_endereco_ref);
+END;
+/
+
+-- tabela Locatario
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '40001-000';
+
+    INSERT INTO Locatario
+    VALUES ('Juliana Pereira', TO_DATE('2002-12-30', 'YYYY-MM-DD'), 'Solteiro', 'Feminino', array_telefone('41987654322', '41994757491', NULL), '01234567810', v_endereco_ref, 'Casa', 'Engenheiro', 7500.00, 'Nao');
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '50001-000';
+
+    INSERT INTO Locatario
+    VALUES ('André Silva', TO_DATE('1995-08-18', 'YYYY-MM-DD'), 'Casado', 'Feminino', array_telefone('51987654322', '51994757491', NULL), '23456789012', v_endereco_ref, 'Apartamento', 'Professor', 4000.00, 'Nao');
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '60001-000';
+
+    INSERT INTO Locatario
+    VALUES ('Camila Santos', TO_DATE('2000-04-02', 'YYYY-MM-DD'), 'Solteiro', 'Feminino', array_telefone('61937654321', '61994757491', NULL), '45678901234', v_endereco_ref, 'Casa', 'Gerente', 7000.00, 'Nao');
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '70001-000';
+
+    INSERT INTO Locatario
+    VALUES ('Lucas Silva', TO_DATE('1996-11-07', 'YYYY-MM-DD'), 'Divorciado', 'Masculino', array_telefone('71987652321', '71994757491', NULL), '78901234562', v_endereco_ref, 'Cobertura', 'Advogado', 9000.00, 'Nao');
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '01234-567';
+
+    INSERT INTO Locatario
+    VALUES ('Bruno Almeida', TO_DATE('1985-03-22', 'YYYY-MM-DD'), 'Casado', 'Masculino', array_telefone('11987653321', NULL, NULL), '98765432100', v_endereco_ref,'Apartamento', 'Designer', 4800.00, 'Sim');
+END;
+/
+
+--tabela Corretor
+INSERT INTO Corretor VALUES (
+    tipo_Corretor('Carlos Eduardo', '12345678901', array_telefone('21987654321', NULL, NULL), NULL)  -- Sem gerenciador
+);
+INSERT INTO Corretor VALUES (
+    tipo_Corretor('Mariana Alves', '23456789012', array_telefone('21998765432', '21988765432', NULL), '78901234567')  -- Gerenciado por CPF
+);
+INSERT INTO Corretor VALUES (
+    tipo_Corretor('Fernanda Souza', '34567890123', array_telefone('31987654323', NULL, NULL), '12345678901')  -- Gerenciado por Carlos Eduardo
+);
+INSERT INTO Corretor VALUES (
+    tipo_Corretor('Bruno Lima', '45678901234', array_telefone('22987654324', '21988765434', NULL), '23456789012')  -- Gerenciado por Mariana Alves
+);
+INSERT INTO Corretor VALUES (
+    tipo_Corretor('Aline Santos', '56789012345', array_telefone('21987654325', NULL, '31994757491'), NULL)  -- Sem gerenciador
+);
+--corretor que também é gerente
+INSERT INTO Corretor VALUES (
+    tipo_Corretor('João Batista', '67890123456', array_telefone('41987654326', '41988765436', NULL), NULL)  -- Sem gerenciador
+);
+
+--tabela Contata
+INSERT INTO Contata VALUES(
+    tipo_Contata('23456789012', '01234567810')
+);
+INSERT INTO Contata VALUES(
+    tipo_Contata('34567890123', '23456789012')
+);
+INSERT INTO Contata VALUES(
+    tipo_Contata('45678901234', '45678901234')
+);
+INSERT INTO Contata VALUES(
+    tipo_Contata('56789012345', '78901234562')
+);
+INSERT INTO Contata VALUES(
+    tipo_Contata('67890123456', '98765432100')
+);
