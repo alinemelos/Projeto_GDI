@@ -56,6 +56,7 @@ VALUES ('Praça Athos Abilhoa','São Paulo', '81450-412',511);
 INSERT INTO Endereco
 VALUES ('Rua São José','São Paulo', '65607-440',567);
 
+
 -- tabela cliente
 DECLARE
     v_endereco_ref REF tipo_Endereco;
@@ -300,6 +301,7 @@ BEGIN
 END;
 /
 
+
 -- tabela Banco
 INSERT INTO Banco VALUES (
     tipo_Banco('Banco do Brasil', array_telefone('11987654321', '11912345678', '11998765432'), '12345678000199')
@@ -356,8 +358,8 @@ INSERT INTO Banco VALUES (
     tipo_Banco('Banco ModalMais', array_telefone('1134567896', NULL, NULL), '12345678001448')
 );
 
---tabela Proprietario
 
+--tabela Proprietario
 DECLARE
     v_endereco_ref REF tipo_Endereco;
 BEGIN
@@ -377,7 +379,7 @@ BEGIN
     WHERE e.CEP = '13001-000';
 
     INSERT INTO Proprietario
-    VALUES ('Ana Oliveira', TO_DATE('2005-07-05', 'YYYY-MM-DD'), 'Solteiro', 'Feminino', array_telefone('19987654321', '81994757498', NULL), '12345678909', v_endereco_ref);
+    VALUES ('Ana Oliveira', TO_DATE('2005-07-05', 'YYYY-MM-DD'), 'Solteiro', 'Feminino', array_telefone('19987654321', '81994757498', NULL), '01234567890', v_endereco_ref);
 END;
 /
 DECLARE
@@ -413,6 +415,7 @@ BEGIN
     VALUES ('Rafael Santos', TO_DATE('1988-05-15', 'YYYY-MM-DD'), 'Solteiro', 'Masculino', array_telefone('31987654322', '31994757491', '31996739626'), '67890123456', v_endereco_ref);
 END;
 /
+
 
 -- tabela Locatario
 DECLARE
@@ -471,6 +474,7 @@ BEGIN
 END;
 /
 
+
 --tabela Corretor
 INSERT INTO Corretor VALUES (
     tipo_Corretor('Carlos Eduardo', '12345678901', array_telefone('21987654321', NULL, NULL), NULL)  -- Sem gerenciador
@@ -492,6 +496,7 @@ INSERT INTO Corretor VALUES (
     tipo_Corretor('João Batista', '67890123456', array_telefone('41987654326', '41988765436', NULL), NULL)  -- Sem gerenciador
 );
 
+
 --tabela Contata
 INSERT INTO Contata VALUES(
     tipo_Contata('23456789012', '01234567810')
@@ -508,3 +513,201 @@ INSERT INTO Contata VALUES(
 INSERT INTO Contata VALUES(
     tipo_Contata('67890123456', '98765432100')
 );
+
+
+--Tabela Imóvel
+DESC tipo_Imovel
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    -- Buscar o REF do endereço recém-inserido
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '22001-000';
+
+    INSERT INTO Imovel
+    VALUES (3, 200000, 140, '78901234567','Apartamento aconchegante', 'Apartamento', 'Apartamento aconchegante com ótima distribuição', 2, 2, v_endereco_ref);
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    -- Buscar o REF do endereço recém-inserido
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '13001-000';
+
+    INSERT INTO Imovel
+    VALUES (4, 600000, 340, '12345678909','Apartamento com ótima área de lazer', 'Apartamento', 'Condominio possui academia, salão de jogos e salão de festas', 3, 2, v_endereco_ref);
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    -- Buscar o REF do endereço recém-inserido
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '25001-000';
+
+    INSERT INTO Imovel
+    VALUES (5, 400000, 240, '98765432109','Casa com bastante quartos', 'Casa', 'Casa perfeita para uma familia grande', 5, 2, v_endereco_ref);
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    -- Buscar o REF do endereço recém-inserido
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '14001-000';
+
+    INSERT INTO Imovel
+    VALUES (6, 100000, 340, '34567890123','Cobertura Duplex', 'Cobertura', 'Cobertura duplex para quem busca espaço e conforto', 6, 5, v_endereco_ref);
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    -- Buscar o REF do endereço recém-inserido
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '35001-000';
+
+    INSERT INTO Imovel
+    VALUES (7, 100000, 140, '67890123456','Casa em condominio grande', 'Casa', 'Casa com piscina', 4, 3, v_endereco_ref);
+END;
+/
+DECLARE
+    v_endereco_ref REF tipo_Endereco;
+BEGIN
+    -- Buscar o REF do endereço recém-inserido
+    SELECT REF(e) INTO v_endereco_ref
+    FROM Endereco e
+    WHERE e.CEP = '40001-000';
+
+    INSERT INTO Imovel
+    VALUES (8, 500000, 240, '01234567810','Apartamento com localização ótima', 'Apartamento', 'Apartamento com localização privilegiada no centro', 4, 3, v_endereco_ref);
+END;
+/
+
+
+-- Tabela Visita
+INSERT INTO Visita
+VALUES(1, '78901234567', '01234567810', '12345678901', TO_DATE('2020-03-22', 'YYYY-MM-DD'), 3);
+INSERT INTO Visita
+VALUES(2, '12345678909', '01234567890', '23456789012', TO_DATE('2024-03-22', 'YYYY-MM-DD'), 4);
+INSERT INTO Visita
+VALUES(3, '98765432109', '45678901234', '34567890123', TO_DATE('2024-09-21', 'YYYY-MM-DD'), 4);
+INSERT INTO Visita
+VALUES(4, '34567890123', '78901234562', '45678901234', TO_DATE('2023-09-30', 'YYYY-MM-DD'), 1);
+INSERT INTO Visita
+VALUES(5, '67890123456', '98765432100', '56789012345', TO_DATE('2022-03-22', 'YYYY-MM-DD'), 5);
+
+
+--tabela Financia
+DECLARE
+    v_locatario_ref REF tipo_Locatario;
+	v_banco_ref REF tipo_Banco;
+	v_imovel_ref REF tipo_Imovel;
+BEGIN
+    SELECT REF(e) INTO v_locatario_ref
+    FROM Locatario e
+    WHERE e.CPF_Cliente = '01234567810';
+
+	SELECT REF(e) INTO v_banco_ref
+    FROM Banco e
+    WHERE e.CNPJ = '12345678000199';
+
+	SELECT REF(e) INTO v_imovel_ref
+    FROM Imovel e
+    WHERE e.idImovel = 1;
+
+    INSERT INTO Financia
+    VALUES (120, v_locatario_ref, v_banco_ref, v_imovel_ref);
+END;
+/
+DECLARE
+    v_locatario_ref REF tipo_Locatario;
+	v_banco_ref REF tipo_Banco;
+	v_imovel_ref REF tipo_Imovel;
+BEGIN
+    SELECT REF(e) INTO v_locatario_ref
+    FROM Locatario e
+    WHERE e.CPF_Cliente = '45678901234';
+
+	SELECT REF(e) INTO v_banco_ref
+    FROM Banco e
+    WHERE e.CNPJ = '12345678000195';
+
+	SELECT REF(e) INTO v_imovel_ref
+    FROM Imovel e
+    WHERE e.idImovel = 3;
+
+    INSERT INTO Financia
+    VALUES (300, v_locatario_ref, v_banco_ref, v_imovel_ref);
+END;
+/
+DECLARE
+    v_locatario_ref REF tipo_Locatario;
+	v_banco_ref REF tipo_Banco;
+	v_imovel_ref REF tipo_Imovel;
+BEGIN
+    SELECT REF(e) INTO v_locatario_ref
+    FROM Locatario e
+    WHERE e.CPF_Cliente = '78901234562';
+
+	SELECT REF(e) INTO v_banco_ref
+    FROM Banco e
+    WHERE e.CNPJ = '56789012000177';
+
+	SELECT REF(e) INTO v_imovel_ref
+    FROM Imovel e
+    WHERE e.idImovel = 4;
+
+    INSERT INTO Financia
+    VALUES (520, v_locatario_ref, v_banco_ref, v_imovel_ref);
+END;
+/
+DECLARE
+    v_locatario_ref REF tipo_Locatario;
+	v_banco_ref REF tipo_Banco;
+	v_imovel_ref REF tipo_Imovel;
+BEGIN
+    SELECT REF(e) INTO v_locatario_ref
+    FROM Locatario e
+    WHERE e.CPF_Cliente = '98765432100';
+
+	SELECT REF(e) INTO v_banco_ref
+    FROM Banco e
+    WHERE e.CNPJ = '98765432000100';
+
+	SELECT REF(e) INTO v_imovel_ref
+    FROM Imovel e
+    WHERE e.idImovel = 5;
+
+    INSERT INTO Financia
+    VALUES (120, v_locatario_ref, v_banco_ref, v_imovel_ref);
+END;
+/
+
+
+-- Tabela Aluga
+INSERT INTO Aluga
+VALUES (1, '12345678901', '01234567810', 1200.00, TO_DATE('1985-03-22', 'YYYY-MM-DD'), TO_DATE('1990-03-22', 'YYYY-MM-DD'));
+INSERT INTO Aluga
+VALUES (3, '34567890123', '45678901234', 700.00, TO_DATE('2020-09-06', 'YYYY-MM-DD'), TO_DATE('2021-09-06', 'YYYY-MM-DD'));
+INSERT INTO Aluga
+VALUES (1, '45678901234', '78901234562', 1200.00, TO_DATE('2017-03-20', 'YYYY-MM-DD'), TO_DATE('2021-03-20', 'YYYY-MM-DD'));
+INSERT INTO Aluga
+VALUES (4, '56789012345', '98765432100', 6000.00, TO_DATE('1985-03-22', 'YYYY-MM-DD'), TO_DATE('1996-03-22', 'YYYY-MM-DD'));
+
+
+--tabela Anuncia 
+INSERT INTO Anuncia
+VALUES ('78901234567', 1, 'Família', 'Ativo', TO_DATE('2024-08-01', 'YYYY-MM-DD'));
+INSERT INTO Anuncia
+VALUES ('98765432109', 3, 'Solteiro', 'Ativo', TO_DATE('2024-08-10', 'YYYY-MM-DD'));
+INSERT INTO Anuncia
+VALUES ('34567890123', 4, 'Família', 'Inativo', TO_DATE('2024-08-15', 'YYYY-MM-DD'));
+INSERT INTO Anuncia
+VALUES ('67890123456', 5, 'Estudante', 'Ativo', TO_DATE('2024-08-18', 'YYYY-MM-DD'));

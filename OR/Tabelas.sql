@@ -234,9 +234,10 @@ CREATE TABLE Anuncia OF tipo_Anuncia(
 
 -- Alter Type para usar o REF:
 
---mudando o tipo_imovel para referenciar proprietario ao invés de usar a chave estrangeira CPF
-ALTER TYPE tipo_Imovel DROP ATTRIBUTE CPF_Proprietario CASCADE; 
-ALTER TYPE tipo_Imovel ADD ATTRIBUTE Proprietario REF tipo_Proprietario CASCADE; 
+--mudando o tipo_imovel para referenciar o endereço
+ALTER TYPE tipo_Imovel DROP ATTRIBUTE Endereco CASCADE; 
+ALTER TYPE tipo_Imovel ADD ATTRIBUTE endereco REF tipo_endereco CASCADE; 
+
 
 --mudando o tipo_financia
 ALTER TYPE tipo_Financia DROP ATTRIBUTE CPF_locatario CASCADE; 
